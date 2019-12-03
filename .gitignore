@@ -1,0 +1,9 @@
+**/dataset/**
+**/__pycache__/**
+*.py[cod]
+.vscode/*
+**/.ipynb_checkpoints*
+**/*.csv
+**/*.log
+**/checkpoin_dir/**
+**/*.tif[f]
