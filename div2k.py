@@ -31,7 +31,6 @@ def make_dataset_for_srcnn(opt, div2k_dir, patch_dst_dir):
     scale_factor = opt.scale_factor
     lr_img_size = opt.lr_img_size
     hr_img_size = lr_img_size * scale_factor
-    # num_img_channels = opt.channels
     stride = opt.stride
 
     div2k_train_hr_dir = os.path.join(div2k_dir, 'DIV2K_train_HR')
@@ -82,19 +81,7 @@ def make_dataset_for_srcnn(opt, div2k_dir, patch_dst_dir):
             for x in range(0, lr_w - lr_img_size + 1, stride):
                 lr_patch = lr_img[y:y+lr_img_size, x:x+lr_img_size, :]
                 hr_patch = hr_img[y*scale_factor:y*scale_factor+hr_img_size, x*scale_factor:x*scale_factor+hr_img_size, :]
-                # print(lr_patch.shape)
-                # print(hr_patch.shape)
-                # cv2.imshow('lr', lr_patch)
-                # cv2.imshow('hr', hr_patch)
 
-                # pauses for 3 seconds before fetching next image
-                # key = cv2.waitKey(3000)
-                # if key == 27:#if ESC is pressed, exit loop
-                #     cv2.destroyAllWindows()
-                #     break
-
-                # training_dataset[i] = lr_patch
-                # validation_dataset[i] = hr_patch
                 lr_img_file = "%04d_%05d_%05d.png" % (i+1, x, y)
                 lr_img_file = os.path.join(train_lr_patches_dir, lr_img_file)
                 hr_img_file = "%04d_%05d_%05d.png" % (i+1, x, y)
@@ -103,28 +90,8 @@ def make_dataset_for_srcnn(opt, div2k_dir, patch_dst_dir):
                 cv2.imwrite(lr_img_file, lr_patch)
                 cv2.imwrite(hr_img_file, hr_patch)
 
-                # lr_patch = lr_patch.transpose((2, 0, 1))
-                # hr_patch = hr_patch.transpose((2, 0, 1))
-
-                # lr_training_patch_list.append(lr_patch.transpose((2, 0, 1)))
-                # hr_training_patch_list.append(hr_patch.transpose((2, 0, 1)))
-
-                # if lr_training_patches is None:
-                #     lr_training_patches = lr_patch.transpose((2, 0, 1))
-                # else:
-                #     lr_training_patches = np.append(lr_training_patches, lr_patch.transpose((2, 0, 1)), axis=0)
-
-                # if hr_training_patches is None:
-                #     hr_training_patches = hr_patch.transpose((2, 0, 1))
-                # else:
-                #     hr_training_patches = np.append(hr_training_patches, hr_patch.transpose((2, 0, 1)), axis=0)
-
-                # print("lr_training_patches.shape: " + str(lr_training_patches.shape))
-                # print("hr_training_patches.shape: " + str(hr_training_patches.shape))
-
     for i, (hr, lr) in enumerate(zip(hr_valid_list, lr_valid_list)):
-
-        print("Processing {}th validation image".format(i))
+        print("Processing validation image LR {} and HR {}".format(lr, hr))
         lr_valid_img_path = os.path.join(div2k_valid_lr_dir, lr)
         hr_valid_img_path = os.path.join(div2k_valid_hr_dir, hr)
         lr_img = cv2.imread(lr_valid_img_path)
@@ -138,11 +105,6 @@ def make_dataset_for_srcnn(opt, div2k_dir, patch_dst_dir):
         hr_h = hr_h - np.mod(hr_h, hr_img_size)
         hr_w = hr_w - np.mod(hr_w, hr_img_size)
 
-        # print(lr_img.shape)
-        # print((lr_h, lr_w, lr_c))
-        # print(hr_img.shape)
-        # print((hr_h, hr_w, hr_c))
-        
         for y in range(0, lr_h - lr_img_size + 1, stride):
             for x in range(0, lr_w - lr_img_size + 1, stride):
                 lr_patch = lr_img[y:y+lr_img_size, x:x+lr_img_size, :]
@@ -155,21 +117,6 @@ def make_dataset_for_srcnn(opt, div2k_dir, patch_dst_dir):
 
                 cv2.imwrite(lr_img_file, lr_patch)
                 cv2.imwrite(hr_img_file, hr_patch)
-
-                # lr_valid_patch_list.append(lr_patch.transpose((2, 0, 1)))
-                # hr_valid_patch_list.append(hr_patch.transpose((2, 0, 1)))
-                # if lr_valid_patches is None:
-                #     lr_valid_patches = lr_patch.transpose((2, 0, 1))
-                # else:
-                #     lr_valid_patches = np.append(lr_valid_patches, lr_patch.transpose((2, 0, 1)), axis=0)
-
-                # if hr_valid_patches is None:
-                #     hr_valid_patches = hr_patch.transpose((2, 0, 1))
-                # else:
-                #     hr_valid_patches = np.append(hr_valid_patches, hr_patch.transpose((2, 0, 1)), axis=0)
-
-                # print("lr_valid_patches.shape: " + str(lr_valid_patches.shape))
-                # print("hr_valid_patches.shape: " + str(hr_valid_patches.shape))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
